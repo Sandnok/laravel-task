@@ -54,13 +54,5 @@ services:
         links:
             - mysql
 
-    # mail hog
-    mail:
-        container_name: ${APP_NAME}_mail-${VERSION}
-        image: mailhog/mailhog
-        ports:
-            - "8025:8025"
-            - "1025:1025"
-
 volumes:
     php-fpm-socket:

@@ -1,0 +1,66 @@
+version: '3'
+
+services:
+    # web server
+    nginx:
+        container_name: ${APP_NAME}_nginx-${VERSION}
+        build: docker/nginx
+        volumes:
+            - php-fpm-socket:/var/run/php-fpm
+            - ./docker/nginx/conf/default.conf:/etc/nginx/conf.d/default.conf
+            - ./docker/nginx/conf/nginx.conf:/etc/nginx/nginx.conf
+            - ${SRC_PATH}:/var/www/html
+            - ./docker/nginx/logs:/var/log/nginx
+        ports:
+            - 8000:8000
+        restart: always
+
+    # backend
+    php:
+        container_name: ${APP_NAME}_php-${VERSION}
+        build: docker/php
+        volumes:
+            - php-fpm-socket:/var/run/php-fpm
+            - ${SRC_PATH}:/var/www/html
+        restart: always
+
+    # DB server
+    mysql:
+        container_name: ${APP_NAME}_mysql-${VERSION}
+        image: mysql:8.0
+        ports:
+            - 13306:3306
+        environment:
+            MYSQL_ROOT_PASSWORD: p@ssw0rd
+            MYSQL_DATABASE: ${DB_DATABASE}
+            MYSQL_USER: ${DB_USERNAME}
+            MYSQL_PASSWORD: ${DB_PASSWORD}
+            TZ: Asia/Tokyo
+        volumes:
+            - ./docker/mysql/data:/var/lib/mysql
+            - ./docker/mysql/conf/my.cnf:/etc/mysql/conf.d/my.cnf
+            - ./docker/mysql/logs:/var/log/mysql
+            - ./docker/mysql/sql:/docker-entrypoint-initdb.d
+        restart: always
+
+    # DB client
+    adminer:
+        container_name: ${APP_NAME}_adminer-${VERSION}
+        hostname: adminer
+        image: adminer:latest
+        restart: always
+        ports:
+            - 8003:8080
+        links:
+            - mysql
+
+    # mail hog
+    mail:
+        container_name: ${APP_NAME}_mail-${VERSION}
+        image: mailhog/mailhog
+        ports:
+            - "8025:8025"
+            - "1025:1025"
+
+volumes:
+    php-fpm-socket:

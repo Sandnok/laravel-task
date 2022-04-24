@@ -42,5 +42,4 @@
 
 # コンテナログイン
 
-`$ docker compose ${service} ps`
-
+`$ docker compose exec ${service} bash or sh`

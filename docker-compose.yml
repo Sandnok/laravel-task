@@ -14,6 +14,7 @@ services:
         ports:
             - 8000:8000
         restart: always
+        platform: 'linux/amd64'
 
     # backend
     php:
@@ -23,6 +24,7 @@ services:
             - php-fpm-socket:/var/run/php-fpm
             - ${SRC_PATH}:/var/www/html
         restart: always
+        platform: 'linux/amd64'
 
     # DB server
     mysql:
@@ -42,6 +44,7 @@ services:
             - ./docker/mysql/logs:/var/log/mysql
             - ./docker/mysql/sql:/docker-entrypoint-initdb.d
         restart: always
+        platform: 'linux/amd64'
 
     # DB client
     adminer:
@@ -53,6 +56,7 @@ services:
             - 8003:8080
         links:
             - mysql
+        platform: 'linux/amd64'
 
 volumes:
     php-fpm-socket:

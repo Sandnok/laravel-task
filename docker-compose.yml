@@ -46,7 +46,7 @@ services:
     # DB client
     phpmyadmin:
         image: phpmyadmin/phpmyadmin
-        container_name: phpmyadmin
+        container_name: ${APP_NAME}_phpmyadmin-${VERSION}
         environment:
             - PMA_ARBITRARY=1
             - PMA_HOST=${DB_HOST}
@@ -62,7 +62,7 @@ services:
     # mailer
     mailcatcher:
         image: schickling/mailcatcher
-        container_name: mailcatcher
+        container_name: ${APP_NAME}_mailcatcher-${VERSION}
         ports:
             - 1080:1080
 

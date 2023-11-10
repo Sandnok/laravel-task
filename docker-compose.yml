@@ -14,7 +14,6 @@ services:
         ports:
             - 8000:8000
         restart: always
-        platform: 'linux/amd64'
 
     # backend
     php:
@@ -24,7 +23,6 @@ services:
             - php-fpm-socket:/var/run/php-fpm
             - ${SRC_PATH}:/var/www/html
         restart: always
-        platform: 'linux/amd64'
 
     # DB server
     mysql:
@@ -44,19 +42,22 @@ services:
             - ./docker/mysql/logs:/var/log/mysql
             - ./docker/mysql/sql:/docker-entrypoint-initdb.d
         restart: always
-        platform: 'linux/amd64'
 
     # DB client
-    adminer:
-        container_name: ${APP_NAME}_adminer-${VERSION}
-        hostname: adminer
-        image: adminer:latest
-        restart: always
-        ports:
-            - 8003:8080
+    phpmyadmin:
+        image: phpmyadmin/phpmyadmin
+        container_name: phpmyadmin
+        environment:
+            - PMA_ARBITRARY=1
+            - PMA_HOST=${DB_HOST}
+            - PMA_USER=${DB_USERNAME}
+            - PMA_PASSWORD=${DB_PASSWORD}
         links:
             - mysql
-        platform: 'linux/amd64'
+        ports:
+            - 8580:80
+        volumes:
+            - /sessions
 
 volumes:
     php-fpm-socket:

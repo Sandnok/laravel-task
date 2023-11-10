@@ -59,5 +59,12 @@ services:
         volumes:
             - /sessions
 
+    # mailer
+    mailcatcher:
+        image: schickling/mailcatcher
+        container_name: mailcatcher
+        ports:
+            - 1080:1080
+
 volumes:
     php-fpm-socket:
